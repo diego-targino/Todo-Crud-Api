@@ -45,7 +45,8 @@ export class TodoService {
     if (todo == undefined) throw new Error("Tarefa não encontrada");
 
     todo.description = editTodoRequestDTO.description;
-    todo.completed = editTodoRequestDTO.completed;
+    todo.completed = editTodoRequestDTO.completed ?? false;
+    todo.categoryId = editTodoRequestDTO.categoryId;
 
     await this.todoRepository.UpdateTodo(todo);
   }

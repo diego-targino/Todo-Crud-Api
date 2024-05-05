@@ -19,6 +19,7 @@ export class CategoryRepository {
         )
     );
   }
+
   async GetCategoryById(categoryId: string): Promise<Category | undefined> {
     const categoriesCollection = await GetCollection("categories");
 
