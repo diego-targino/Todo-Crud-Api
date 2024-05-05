@@ -14,7 +14,7 @@ export class CategoryController {
 
       return res.status(200).send(categories);
     } catch (error: any) {
-      return res.status(500).send(error.message);
+      return res.status(500).send({ message: error.message });
     }
   }
 
@@ -26,9 +26,9 @@ export class CategoryController {
       let createCategoryRequestDTO = req.body;
       await new CategoryService().createCategory(createCategoryRequestDTO);
 
-      return res.status(201).send("Tarefa criada com sucesso");
+      return res.status(201).send({ message: "Categoria criada com sucesso" });
     } catch (error: any) {
-      return res.status(500).send(error.message);
+      return res.status(500).send({ message: error.message });
     }
   }
 
@@ -44,9 +44,9 @@ export class CategoryController {
 
       await new CategoryService().editCategory(editCategoryRequestDTO);
 
-      return res.status(200).send("Tarefa editada com sucesso");
+      return res.status(200).send({ message: "Categoria editada com sucesso" });
     } catch (error: any) {
-      return res.status(500).send(error.message);
+      return res.status(500).send({ message: error.message });
     }
   }
 
@@ -56,9 +56,11 @@ export class CategoryController {
 
       await new CategoryService().deleteCategory(categoryId);
 
-      return res.status(200).send("Tarefa excluída com sucesso");
+      return res
+        .status(200)
+        .send({ message: "Categoria excluída com sucesso" });
     } catch (error: any) {
-      return res.status(500).send(error.message);
+      return res.status(500).send({ message: error.message });
     }
   }
 }

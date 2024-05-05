@@ -15,7 +15,7 @@ export class UserController {
 
       return res.status(200).send(loginResponseDTO);
     } catch (error: any) {
-      return res.status(500).send(error.message);
+      return res.status(500).send({ message: error.message });
     }
   }
 
@@ -28,9 +28,11 @@ export class UserController {
 
       await new UserService().createUser(registerUserRequestDTO);
 
-      return res.status(201).send("Usuário cadastriado com sucesso");
+      return res
+        .status(201)
+        .send({ message: "Usuário cadastriado com sucesso" });
     } catch (error: any) {
-      return res.status(500).send(error.message);
+      return res.status(500).send({ message: error.message });
     }
   }
 }

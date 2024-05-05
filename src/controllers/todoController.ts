@@ -7,15 +7,22 @@ import { EditTodoRequestDTO } from "../dtos/request/todos/editTodoRequestDTO";
 export class TodoController {
   async getTodos(req: Request, res: Response): Promise<Response> {
     try {
-      let userId: string = req.headers["userid"] as string;
+      let { userId, categoryId } = req.headers;
 
-      const todos: ListTodosResponseDTO = await new TodoService().listTodos(
-        userId
-      );
+      if (!userId)
+        return res.status(400).send({ message: "Requisição inválida" });
 
-      return res.status(200).send(todos);
+      const listTodosRequest = {
+        userId: userId?.toString(),
+        categoryId: categoryId?.toString(),
+      };
+
+      const listTodosResponse: ListTodosResponseDTO =
+        await new TodoService().listTodos(listTodosRequest);
+
+      return res.status(200).send(listTodosResponse);
     } catch (error: any) {
-      return res.status(500).send(error.message);
+      return res.status(500).send({ message: error.message });
     }
   }
 
@@ -27,9 +34,9 @@ export class TodoController {
       let createTodoRequestDTO = req.body;
       await new TodoService().createTodo(createTodoRequestDTO);
 
-      return res.status(201).send("Tarefa criada com sucesso");
+      return res.status(201).send({ message: "Tarefa criada com sucesso" });
     } catch (error: any) {
-      return res.status(500).send(error.message);
+      return res.status(500).send({ message: error.message });
     }
   }
 
@@ -45,9 +52,9 @@ export class TodoController {
 
       await new TodoService().editTodo(editTodoRequestDTO);
 
-      return res.status(200).send("Tarefa editada com sucesso");
+      return res.status(200).send({ message: "Tarefa editada com sucesso" });
     } catch (error: any) {
-      return res.status(500).send(error.message);
+      return res.status(500).send({ message: error.message });
     }
   }
 
@@ -57,9 +64,9 @@ export class TodoController {
 
       await new TodoService().deleteTodo(todoId);
 
-      return res.status(200).send("Tarefa excluída com sucesso");
+      return res.status(200).send({ message: "Tarefa excluída com sucesso" });
     } catch (error: any) {
-      return res.status(500).send(error.message);
+      return res.status(500).send({ message: error.message });
     }
   }
 }
