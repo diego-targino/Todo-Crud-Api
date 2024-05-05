@@ -9,7 +9,13 @@ export class TodoRepository {
 
     return todos.map(
       (todo) =>
-        new Todo(todo.description, todo.completed, todo.userId, todo._id)
+        new Todo(
+          todo.description,
+          todo.completed,
+          todo.userId,
+          todo._id,
+          todo.categoryId
+        )
     );
   }
 
@@ -21,7 +27,13 @@ export class TodoRepository {
     });
 
     if (todo)
-      return new Todo(todo.description, todo.completed, todo.userId, todo._id);
+      return new Todo(
+        todo.description,
+        todo.completed,
+        todo.userId,
+        todo._id,
+        todo.categoryId
+      );
   }
 
   async AddTodo(todo: Todo): Promise<void> {

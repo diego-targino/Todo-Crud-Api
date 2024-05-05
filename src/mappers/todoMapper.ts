@@ -7,7 +7,8 @@ export class TodoMaper {
       object.description,
       object.completed ?? false,
       object.userId,
-      object.id ? ObjectId.createFromHexString(object.id) : new ObjectId()
+      object.id ? ObjectId.createFromHexString(object.id) : new ObjectId(),
+      object.categoryId
     );
   }
 }

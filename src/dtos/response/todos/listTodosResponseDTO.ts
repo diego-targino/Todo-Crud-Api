@@ -1,5 +1,5 @@
-import { Todo } from "../../../database/Models/todo";
+import { TodoResponseDTO } from "./todoResponseDTO";
 
 export interface ListTodosResponseDTO {
-  todos: Todo[];
+  todos: TodoResponseDTO[];
 }

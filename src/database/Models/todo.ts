@@ -5,6 +5,7 @@ export class Todo {
     public description: string,
     public completed: boolean,
     public userId: string,
-    public _id?: ObjectId
+    public _id?: ObjectId,
+    public categoryId?: string
   ) {}
 }

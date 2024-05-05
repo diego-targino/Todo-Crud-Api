@@ -9,7 +9,7 @@ export class TodoController {
     try {
       let userId: string = req.headers["userid"] as string;
 
-      const todos: ListTodosResponseDTO = await new TodoService().ListTodos(
+      const todos: ListTodosResponseDTO = await new TodoService().listTodos(
         userId
       );
 
@@ -25,7 +25,7 @@ export class TodoController {
   ): Promise<Response> {
     try {
       let createTodoRequestDTO = req.body;
-      await new TodoService().AddTodo(createTodoRequestDTO);
+      await new TodoService().createTodo(createTodoRequestDTO);
 
       return res.status(201).send("Tarefa criada com sucesso");
     } catch (error: any) {
@@ -43,7 +43,7 @@ export class TodoController {
         id: req.params.id,
       };
 
-      await new TodoService().UpdateTodo(editTodoRequestDTO);
+      await new TodoService().editTodo(editTodoRequestDTO);
 
       return res.status(200).send("Tarefa editada com sucesso");
     } catch (error: any) {
@@ -55,7 +55,7 @@ export class TodoController {
     try {
       let todoId: string = req.params.id;
 
-      await new TodoService().DeleteTodo(todoId);
+      await new TodoService().deleteTodo(todoId);
 
       return res.status(200).send("Tarefa excluída com sucesso");
     } catch (error: any) {

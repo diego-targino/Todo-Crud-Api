@@ -11,7 +11,7 @@ export class UserController {
     try {
       const loginRequestDTO = req.body;
 
-      const loginResponseDTO = await new UserService().Login(loginRequestDTO);
+      const loginResponseDTO = await new UserService().login(loginRequestDTO);
 
       return res.status(200).send(loginResponseDTO);
     } catch (error: any) {
@@ -26,7 +26,7 @@ export class UserController {
     try {
       const registerUserRequestDTO = req.body;
 
-      await new UserService().CreateUser(registerUserRequestDTO);
+      await new UserService().createUser(registerUserRequestDTO);
 
       return res.status(201).send("Usuário cadastriado com sucesso");
     } catch (error: any) {

@@ -3,7 +3,7 @@ import { TodoRepository } from "../database/Repositories/todoRepository";
 import { CreateTodoRequestDTO } from "../dtos/request/todos/createTodoRequestDTO";
 import { EditTodoRequestDTO } from "../dtos/request/todos/editTodoRequestDTO";
 import { ListTodosResponseDTO } from "../dtos/response/todos/listTodosResponseDTO";
-
+import { TodoResponseDTO } from "../dtos/response/todos/todoResponseDTO";
 import { TodoMaper } from "../mappers/todoMapper";
 import { TodoValidator } from "../validators/todoValidator";
 
@@ -14,12 +14,22 @@ export class TodoService {
     this.todoRepository = new TodoRepository();
   }
 
-  async ListTodos(userId: string): Promise<ListTodosResponseDTO> {
-    let todos: Todo[] = await this.todoRepository.GetTodoList(userId);
-    return { todos };
+  async listTodos(userId: string): Promise<ListTodosResponseDTO> {
+    const todos: Todo[] = await this.todoRepository.GetTodoList(userId);
+
+    const todosDTO: TodoResponseDTO[] = todos.map((todo) => {
+      return {
+        id: todo._id!.toString(),
+        completed: todo.completed,
+        description: todo.description,
+        categoryId: todo.categoryId,
+      };
+    });
+
+    return { todos: todosDTO };
   }
 
-  async AddTodo(createTodoRequestDTO: CreateTodoRequestDTO): Promise<void> {
+  async createTodo(createTodoRequestDTO: CreateTodoRequestDTO): Promise<void> {
     TodoValidator.createTodoValidator(createTodoRequestDTO);
 
     let todo: Todo = TodoMaper.mapTodo(createTodoRequestDTO);
@@ -27,7 +37,7 @@ export class TodoService {
     await this.todoRepository.AddTodo(todo);
   }
 
-  async UpdateTodo(editTodoRequestDTO: EditTodoRequestDTO): Promise<void> {
+  async editTodo(editTodoRequestDTO: EditTodoRequestDTO): Promise<void> {
     TodoValidator.editTodoValidator(editTodoRequestDTO);
 
     let todo = await this.todoRepository.GetTodoById(editTodoRequestDTO.id);
@@ -40,7 +50,7 @@ export class TodoService {
     await this.todoRepository.UpdateTodo(todo);
   }
 
-  async DeleteTodo(id: string): Promise<void> {
+  async deleteTodo(id: string): Promise<void> {
     await this.todoRepository.DeleteTodo(id);
   }
 }

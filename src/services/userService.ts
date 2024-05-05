@@ -12,7 +12,7 @@ export class UserService {
 
   constructor() {}
 
-  async Login(loginRequestDTO: LoginRequestDTO): Promise<LoginResponseDTO> {
+  async login(loginRequestDTO: LoginRequestDTO): Promise<LoginResponseDTO> {
     UserValidator.loginValidator(loginRequestDTO);
 
     let encriptedPassword = EncriptStringSha512(loginRequestDTO.password);
@@ -28,7 +28,7 @@ export class UserService {
     };
   }
 
-  async CreateUser(
+  async createUser(
     registerUserRequestDTO: RegisterUserRequestDTO
   ): Promise<void> {
     UserValidator.createuserValidator(registerUserRequestDTO);
