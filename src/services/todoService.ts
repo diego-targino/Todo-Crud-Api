@@ -2,6 +2,7 @@ import { Todo } from "../database/Models/todo";
 import { TodoRepository } from "../database/Repositories/todoRepository";
 import { CreateTodoRequestDTO } from "../dtos/request/todos/createTodoRequestDTO";
 import { EditTodoRequestDTO } from "../dtos/request/todos/editTodoRequestDTO";
+import { ListTodosrequestDTO } from "../dtos/request/todos/listTodosRequestDTO";
 import { ListTodosResponseDTO } from "../dtos/response/todos/listTodosResponseDTO";
 import { TodoResponseDTO } from "../dtos/response/todos/todoResponseDTO";
 import { TodoMaper } from "../mappers/todoMapper";
@@ -14,8 +15,13 @@ export class TodoService {
     this.todoRepository = new TodoRepository();
   }
 
-  async listTodos(userId: string): Promise<ListTodosResponseDTO> {
-    const todos: Todo[] = await this.todoRepository.GetTodoList(userId);
+  async listTodos(
+    listTodosrequestDTO: ListTodosrequestDTO
+  ): Promise<ListTodosResponseDTO> {
+    const todos: Todo[] = await this.todoRepository.GetTodoList(
+      listTodosrequestDTO.userId,
+      listTodosrequestDTO.categoryId
+    );
 
     const todosDTO: TodoResponseDTO[] = todos.map((todo) => {
       return {

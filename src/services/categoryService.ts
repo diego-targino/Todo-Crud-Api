@@ -1,5 +1,5 @@
-import { Category } from "../database/Models/category";
 import { CategoryRepository } from "../database/Repositories/categoryRepository";
+import { TodoRepository } from "../database/Repositories/todoRepository";
 import { CreateCategoryRequestDTO } from "../dtos/request/categories/createCategoryRequestDTO";
 import { EditCategoryRequestDTO } from "../dtos/request/categories/editCategoryRequestDTO";
 import { CategoryResponseDTO } from "../dtos/response/categories/categoryResponseDTO";
@@ -57,6 +57,19 @@ export class CategoryService {
   }
 
   async deleteCategory(categoryId: string): Promise<void> {
+    const todoRepository = new TodoRepository();
+
+    const category = await this.categoryRepository.GetCategoryById(categoryId);
+
+    if (!category) throw Error("Categoria não encontrada");
+
     await this.categoryRepository.DeleteCategory(categoryId);
+
+    let todos = await todoRepository.GetTodoList(category.userId, categoryId);
+
+    todos.forEach((todo) => {
+      todo.categoryId = undefined;
+      todoRepository.UpdateTodo(todo);
+    });
   }
 }

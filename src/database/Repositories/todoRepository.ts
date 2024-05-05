@@ -3,8 +3,13 @@ import { Todo } from "../Models/todo";
 import { GetCollection } from "../configuration/mongoConfiguration";
 
 export class TodoRepository {
-  async GetTodoList(userId: string): Promise<Todo[]> {
+  async GetTodoList(userId: string, categoryId?: string): Promise<Todo[]> {
     const todoCollection = await GetCollection("todos");
+
+    let query = { userId: userId, categoryId: categoryId };
+
+    if (!categoryId) delete query.categoryId;
+
     const todos = await todoCollection.find({ userId: userId }).toArray();
 
     return todos.map(
