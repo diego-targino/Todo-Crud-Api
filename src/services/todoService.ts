@@ -7,30 +7,32 @@ import { ListTodosResponseDTO } from "../dtos/response/todos/listTodosResponseDT
 import { TodoResponseDTO } from "../dtos/response/todos/todoResponseDTO";
 import { TodoMaper } from "../mappers/todoMapper";
 import { TodoValidator } from "../validators/todoValidator";
+import { TagService } from "./tagService";
+import { CategoryService } from "./categoryService";
 
 export class TodoService {
   todoRepository: TodoRepository;
+  tagService: TagService;
+  categoryService: CategoryService;
 
   constructor() {
     this.todoRepository = new TodoRepository();
+
+    this.tagService = new TagService();
+    this.categoryService = new CategoryService();
   }
 
   async listTodos(
-    listTodosrequestDTO: ListTodosrequestDTO
+    listTodosrequestDTO: ListTodosrequestDTO,
   ): Promise<ListTodosResponseDTO> {
     const todos: Todo[] = await this.todoRepository.GetTodoList(
       listTodosrequestDTO.userId,
-      listTodosrequestDTO.categoryId
+      listTodosrequestDTO.categoryId,
     );
 
-    const todosDTO: TodoResponseDTO[] = todos.map((todo) => {
-      return {
-        id: todo._id!.toString(),
-        completed: todo.completed,
-        description: todo.description,
-        categoryId: todo.categoryId,
-      };
-    });
+    const todosDTO: TodoResponseDTO[] = await Promise.all(
+      todos.map(async (todo) => await this.getTodoAdditionalData(todo)),
+    );
 
     return { todos: todosDTO };
   }
@@ -39,8 +41,13 @@ export class TodoService {
     TodoValidator.createTodoValidator(createTodoRequestDTO);
 
     let todo: Todo = TodoMaper.mapTodo(createTodoRequestDTO);
-
     await this.todoRepository.AddTodo(todo);
+
+    if (createTodoRequestDTO.tags)
+      await this.tagService.createTags(
+        createTodoRequestDTO.tags,
+        todo._id!.toString(),
+      );
   }
 
   async editTodo(editTodoRequestDTO: EditTodoRequestDTO): Promise<void> {
@@ -59,5 +66,23 @@ export class TodoService {
 
   async deleteTodo(id: string): Promise<void> {
     await this.todoRepository.DeleteTodo(id);
+
+    await this.tagService.deleteTagsByTodo(id);
+  }
+
+  private async getTodoAdditionalData(todo: Todo): Promise<TodoResponseDTO> {
+    const tagsResponse = await this.tagService.GetTagList(todo._id!.toString());
+
+    let categoryResponse = await this.categoryService.GetCategoryById(
+      todo.categoryId || "",
+    );
+
+    return {
+      id: todo._id!.toString(),
+      completed: todo.completed,
+      description: todo.description,
+      category: categoryResponse,
+      tags: tagsResponse,
+    };
   }
 }
