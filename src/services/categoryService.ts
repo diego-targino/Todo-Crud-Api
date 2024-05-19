@@ -24,13 +24,13 @@ export class CategoryService {
           color: category.color,
           id: category._id?.toString() || "",
         };
-      },
+      }
     );
     return { categories: CategoryDTOList };
   }
 
   async GetCategoryById(
-    categoryId: string,
+    categoryId: string
   ): Promise<CategoryResponseDTO | undefined> {
     const category = await this.categoryRepository.GetCategoryById(categoryId!);
 
@@ -44,7 +44,7 @@ export class CategoryService {
   }
 
   async createCategory(
-    createCategoryRequestDTO: CreateCategoryRequestDTO,
+    createCategoryRequestDTO: CreateCategoryRequestDTO
   ): Promise<void> {
     CategoryValidator.createCategoryValidator(createCategoryRequestDTO);
 
@@ -54,12 +54,12 @@ export class CategoryService {
   }
 
   async editCategory(
-    editCategoryRequestDTO: EditCategoryRequestDTO,
+    editCategoryRequestDTO: EditCategoryRequestDTO
   ): Promise<void> {
     CategoryValidator.editCategoryValidator(editCategoryRequestDTO);
 
     let category = await this.categoryRepository.GetCategoryById(
-      editCategoryRequestDTO.id,
+      editCategoryRequestDTO.id
     );
 
     if (!category) throw new Error("Categoria não encontrada");

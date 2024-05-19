@@ -10,7 +10,7 @@ export class TodoRepository {
 
     if (!categoryId) delete query.categoryId;
 
-    const todos = await todoCollection.find({ userId: userId }).toArray();
+    const todos = await todoCollection.find(query).toArray();
 
     return todos.map(
       (todo) =>

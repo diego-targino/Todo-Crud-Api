@@ -7,7 +7,8 @@ import { EditTodoRequestDTO } from "../dtos/request/todos/editTodoRequestDTO";
 export class TodoController {
   async getTodos(req: Request, res: Response): Promise<Response> {
     try {
-      let { userId, categoryId } = req.headers;
+      let userId = req.headers["userid"];
+      let categoryId = req.headers["categoryid"];
 
       if (!userId)
         return res.status(400).send({ message: "Requisição inválida" });

@@ -1,6 +1,8 @@
 import * as dotenv from "dotenv";
 import { Collection, Db, MongoClient } from "mongodb";
 
+const database = ConectToDB();
+
 async function ConectToDB(): Promise<Db> {
   dotenv.config();
   const client: MongoClient = new MongoClient(process.env.MONGO_URI || "");
@@ -13,7 +15,6 @@ async function ConectToDB(): Promise<Db> {
 export async function GetCollection(
   collectionName: string
 ): Promise<Collection> {
-  const db = await ConectToDB();
-  const collection = db.collection(collectionName);
+  const collection = (await database).collection(collectionName);
   return collection;
 }

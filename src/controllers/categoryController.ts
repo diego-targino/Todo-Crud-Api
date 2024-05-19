@@ -4,13 +4,15 @@ import { CategoryService } from "../services/categoryService";
 import { CreateCategoryRequestDTO } from "../dtos/request/categories/createCategoryRequestDTO";
 import { EditCategoryRequestDTO } from "../dtos/request/categories/editCategoryRequestDTO";
 
+const service = new CategoryService();
+
 export class CategoryController {
-  async getCategories(req: Request, res: Response): Promise<Response> {
+  static async getCategories(req: Request, res: Response): Promise<Response> {
     try {
       let userId: string = req.headers["userid"] as string;
 
       const categories: ListCategoriesResponseDTO =
-        await new CategoryService().ListCategories(userId);
+        await service.ListCategories(userId);
 
       return res.status(200).send(categories);
     } catch (error: any) {
@@ -18,13 +20,13 @@ export class CategoryController {
     }
   }
 
-  async createCategory(
+  static async createCategory(
     req: Request<any, any, CreateCategoryRequestDTO>,
     res: Response
   ): Promise<Response> {
     try {
       let createCategoryRequestDTO = req.body;
-      await new CategoryService().createCategory(createCategoryRequestDTO);
+      await service.createCategory(createCategoryRequestDTO);
 
       return res.status(201).send({ message: "Categoria criada com sucesso" });
     } catch (error: any) {
@@ -32,7 +34,7 @@ export class CategoryController {
     }
   }
 
-  async editCategory(
+  static async editCategory(
     req: Request<any, any, EditCategoryRequestDTO>,
     res: Response
   ): Promise<Response> {
@@ -42,7 +44,7 @@ export class CategoryController {
         id: req.params.id,
       };
 
-      await new CategoryService().editCategory(editCategoryRequestDTO);
+      await service.editCategory(editCategoryRequestDTO);
 
       return res.status(200).send({ message: "Categoria editada com sucesso" });
     } catch (error: any) {
@@ -50,11 +52,11 @@ export class CategoryController {
     }
   }
 
-  async deleteCategory(req: Request, res: Response): Promise<Response> {
+  static async deleteCategory(req: Request, res: Response): Promise<Response> {
     try {
       let categoryId: string = req.params.id;
 
-      await new CategoryService().deleteCategory(categoryId);
+      await service.deleteCategory(categoryId);
 
       return res
         .status(200)

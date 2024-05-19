@@ -23,15 +23,15 @@ export class TodoService {
   }
 
   async listTodos(
-    listTodosrequestDTO: ListTodosrequestDTO,
+    listTodosrequestDTO: ListTodosrequestDTO
   ): Promise<ListTodosResponseDTO> {
     const todos: Todo[] = await this.todoRepository.GetTodoList(
       listTodosrequestDTO.userId,
-      listTodosrequestDTO.categoryId,
+      listTodosrequestDTO.categoryId
     );
 
     const todosDTO: TodoResponseDTO[] = await Promise.all(
-      todos.map(async (todo) => await this.getTodoAdditionalData(todo)),
+      todos.map(async (todo) => await this.getTodoAdditionalData(todo))
     );
 
     return { todos: todosDTO };
@@ -46,7 +46,7 @@ export class TodoService {
     if (createTodoRequestDTO.tags)
       await this.tagService.createTags(
         createTodoRequestDTO.tags,
-        todo._id!.toString(),
+        todo._id!.toString()
       );
   }
 
@@ -73,9 +73,12 @@ export class TodoService {
   private async getTodoAdditionalData(todo: Todo): Promise<TodoResponseDTO> {
     const tagsResponse = await this.tagService.GetTagList(todo._id!.toString());
 
-    let categoryResponse = await this.categoryService.GetCategoryById(
-      todo.categoryId || "",
-    );
+    let categoryResponse = undefined;
+
+    if (todo.categoryId)
+      categoryResponse = await this.categoryService.GetCategoryById(
+        todo.categoryId
+      );
 
     return {
       id: todo._id!.toString(),
