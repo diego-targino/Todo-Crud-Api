@@ -1,7 +1,0 @@
-{
-
-    "scripts": {
-      "vercel": "node dist/server.js"
-    }
-  }
-  
